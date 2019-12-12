@@ -528,7 +528,7 @@
     _setHelperLayerPosition.call(this, document.querySelector('.introjs-helperLayer'));
     _setHelperLayerPosition.call(this, document.querySelector('.introjs-tooltipReferenceLayer'));
     _setHelperLayerPosition.call(this, document.querySelector('.introjs-disableInteraction'));
-    if (this._introItems[this._currentStep].additionalElements) {
+    if (typeof (this._currentStep) !== 'undefined' && this._introItems[this._currentStep].additionalElements) {
       _forEach(this._introItems[this._currentStep].additionalElements, function(additionalElement, additionalElementIndex) {
         _setHelperLayerPosition.call(this, document.querySelector('.introjs-additionalElementHelperLayer-' + additionalElementIndex, additionalElement));
         _setHelperLayerPosition.call(this, document.querySelector('.introjs-additionalElementDisableInteraction-' + additionalElementIndex, additionalElement));
@@ -540,7 +540,9 @@
       var oldHelperNumberLayer = document.querySelector('.introjs-helperNumberLayer'),
         oldArrowLayer        = document.querySelector('.introjs-arrow'),
         oldtooltipContainer  = document.querySelector('.introjs-tooltip');
-      _placeTooltip.call(this, this._introItems[this._currentStep].element, oldtooltipContainer, oldArrowLayer, oldHelperNumberLayer);
+      if (oldtooltipContainer) {
+        _placeTooltip.call(this, this._introItems[this._currentStep].element, oldtooltipContainer, oldArrowLayer, oldHelperNumberLayer);
+      }
     }
 
     //re-align hints
@@ -2004,11 +2006,8 @@
    * @method _reAlignHints
    */
   function _reAlignHints() {
+    _populateHints.call(this, this._targetElement);
     _forEach(this._introItems, function (item) {
-      if (typeof(item.targetElement) === 'undefined') {
-        return;
-      }
-
       _alignHintPosition.call(this, item.hintPosition, item.element, item.targetElement);
     }.bind(this));
   }
@@ -2162,7 +2161,14 @@
 
     _forEach(this._introItems, function(item, i) {
       // avoid append a hint twice
-      if (document.querySelector('.introjs-hint[data-step="' + i + '"]')) {
+      var foundHintElement = document.querySelector('.introjs-hint[data-step="' + i + '"]')
+      if (foundHintElement) {
+        // reapply elements if required
+        if (!item.targetElement) {
+          item.targetElement = item.element;
+          item.element = foundHintElement;
+        }
+
         return;
       }
 
