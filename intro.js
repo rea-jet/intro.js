@@ -528,7 +528,7 @@
     _setHelperLayerPosition.call(this, document.querySelector('.introjs-helperLayer'));
     _setHelperLayerPosition.call(this, document.querySelector('.introjs-tooltipReferenceLayer'));
     _setHelperLayerPosition.call(this, document.querySelector('.introjs-disableInteraction'));
-    if (typeof (this._currentStep) !== 'undefined' && this._introItems[this._currentStep].additionalElements) {
+    if (typeof (this._currentStep) !== 'undefined' && this._introItems[this._currentStep] && this._introItems[this._currentStep].additionalElements) {
       _forEach(this._introItems[this._currentStep].additionalElements, function(additionalElement, additionalElementIndex) {
         _setHelperLayerPosition.call(this, document.querySelector('.introjs-additionalElementHelperLayer-' + additionalElementIndex, additionalElement));
         _setHelperLayerPosition.call(this, document.querySelector('.introjs-additionalElementDisableInteraction-' + additionalElementIndex, additionalElement));
@@ -2006,6 +2006,7 @@
    * @method _reAlignHints
    */
   function _reAlignHints() {
+    _removeHints();
     _populateHints.call(this, this._targetElement);
     _forEach(this._introItems, function (item) {
       _alignHintPosition.call(this, item.hintPosition, item.element, item.targetElement);
