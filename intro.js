@@ -536,7 +536,7 @@
     }
 
     // re-align tooltip
-    if(typeof (this._currentStep) !== 'undefined' && this._currentStep !== null) {
+    if(this._mode === 'steps' && typeof (this._currentStep) !== 'undefined' && this._currentStep !== null) {
       var oldHelperNumberLayer = document.querySelector('.introjs-helperNumberLayer'),
         oldArrowLayer        = document.querySelector('.introjs-arrow'),
         oldtooltipContainer  = document.querySelector('.introjs-tooltip');
@@ -546,7 +546,9 @@
     }
 
     //re-align hints
-    _reAlignHints.call(this);
+    if (this._mode === 'hints') {
+      _reAlignHints.call(this);
+    }
     return this;
   }
 
@@ -2493,6 +2495,12 @@
     },
     setOptions: function(options) {
       this._options = _mergeOptions(this._options, options);
+      if (options && options.steps) {
+        this._mode = 'steps';
+      }
+      if (options && options.hints) {
+        this._mode = 'hints';
+      }
       return this;
     },
     start: function (group) {
